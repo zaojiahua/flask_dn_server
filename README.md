@@ -68,7 +68,7 @@ class Bing():
 
 ```python
 from dn.app import DNApp
-# 调用register_view_func之前，引入需要对外提供接口的模块，template.view模块就是上面的示例代码文件。
+# 调用register_view_func之前，引入需要对外提供接口的模块，template.view.home模块就是上面的示例代码文件。
 from template.view import home
 
 

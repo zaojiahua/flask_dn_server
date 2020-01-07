@@ -1,0 +1,8 @@
+*.log
+*.temp
+*.tar
+__pycache__
+flask_dn_server.egg-info/
+build/
+cache/
+dist/

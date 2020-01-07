@@ -1,0 +1,26 @@
+main:
+  appname: knowledge
+  appconfig:
+    SECRET_KEY: this is a secret key
+  log:
+    facility: 1
+    filters: {}
+    level: info
+    server:
+    - 127.0.0.1
+    - 514
+    stdout: true
+  sqldb:
+    default:
+      options:
+        echo: false
+        pool_recycle: 3600
+        pool_size: 10
+        pool_pre_ping: True
+      url: mysql+pymysql://root:root@10.39.32.45:31527/QA_V2?charset=utf8mb4
+    oldQA:
+      url: mysql+pymysql://root:root@10.39.32.45:31527/QA?charset=utf8mb4
+  sparql:
+    ip: http://lk-sydn-jena-api.omepaas.enncloud.cn
+    port: 80
+    databasename: visualization

@@ -64,7 +64,7 @@ class Bing():
     pass
 ```
 
-在自己的项目下，创建一个server.py文件，加入以下代码。调用register_view_func之前，引入需要对外提供接口的模块，template.view模块就是上面的示例代码文件。
+在自己的项目下，创建一个server.py文件，加入以下代码。调用register_view_func之前，引入需要对外提供接口的模块，template.view.home模块就是上面的示例代码文件。
 
 ```python
 from dn.app import DNApp

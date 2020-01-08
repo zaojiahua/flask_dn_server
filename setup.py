@@ -1,14 +1,9 @@
 from setuptools import setup, find_packages
 
 install_requires = [
-    'PyYAML==4.2b4',
     'flask==1.0.2',
     'gevent==1.4.0',
-    'redis-py-cluster==1.3.6',
-    'redis==2.10.6',
-    'simplejson==3.16.0',
-    'sqlalchemy==1.3.3',
-    'pymysql==0.9.3'
+    'gunicorn',
 ]
 
 setup(

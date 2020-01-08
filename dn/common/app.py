@@ -2,10 +2,10 @@ import os
 import pkgutil
 import sys
 
-from dn.common import log
-from dn.common import sqldb
-from dn.common.globals import config, config_object
-from dn.common.yamlconfig import YamlConfig
+# from dn.common import log
+# from dn.common import sqldb
+# from dn.common.globals import config, config_object
+# from dn.common.yamlconfig import YamlConfig
 
 
 class DNEnv(object):
@@ -15,9 +15,9 @@ class DNEnv(object):
             self.config_file = config_file
         else:
             self.config_file = os.path.join(self.root_path, config_file)
-        config_object.set_target_object(YamlConfig(self.config_file).preload())
-        self.init_log()
-        self.init_sqldb()
+        # config_object.set_target_object(YamlConfig(self.config_file).preload())
+        # self.init_log()
+        # self.init_sqldb()
         self.init_app()
 
     def get_root_path(self, import_name):
@@ -44,31 +44,31 @@ class DNEnv(object):
 
         return os.path.dirname(os.path.abspath(filepath))
 
-    def init_log(self):
-        log_config = config.log
-        name = config.appname
-        stdout = log_config['stdout']
-        facility = log_config['facility']
-        level = log_config['level'].upper()
-        address = log_config['server']
-        filters = log_config['filters']
-        filters = dict(map(lambda x: ('.%s' % (x[0]), x[1]), filters.items()))
+    # def init_log(self):
+    #     log_config = config.log
+    #     name = config.appname
+    #     stdout = log_config['stdout']
+    #     facility = log_config['facility']
+    #     level = log_config['level'].upper()
+    #     address = log_config['server']
+    #     filters = log_config['filters']
+    #     filters = dict(map(lambda x: ('.%s' % (x[0]), x[1]), filters.items()))
 
-        log.setup(root=name, stdout=stdout, filters=filters)
+    #     log.setup(root=name, stdout=stdout, filters=filters)
 
-        log.syslog_handlers(
-            [name, 'werkzeug'], address=address,
-            facility=facility, level=level)
-        log.syslog_handlers(
-            '%s.api' % name, address=address,
-            facility=facility, level=level)
+    #     log.syslog_handlers(
+    #         [name, 'werkzeug'], address=address,
+    #         facility=facility, level=level)
+    #     log.syslog_handlers(
+    #         '%s.api' % name, address=address,
+    #         facility=facility, level=level)
 
-    def init_sqldb(self):
-        conf = config.sqldb
-        if not conf:
-            return
-        for name in conf:
-            sqldb.get_dbsession(name)
+    # def init_sqldb(self):
+    #     conf = config.sqldb
+    #     if not conf:
+    #         return
+    #     for name in conf:
+    #         sqldb.get_dbsession(name)
 
     def init_app(self):
         pass

@@ -9,7 +9,7 @@ from flask import Blueprint, Flask, g, json, jsonify, request, Response
 from dn.common import log, sqldb
 from dn.common.app import DNEnv
 from dn.common.exceptions import AppBaseException, RequestDataException
-from dn.common.globals import config
+# from dn.common.globals import config
 
 from werkzeug.exceptions import HTTPException
 
@@ -26,6 +26,13 @@ class DNResponse(Response):
         if isinstance(response, (list, dict)):
             response = jsonify(response)
         return super(Response, cls).force_type(response, environ)
+
+
+class DNFlask(Flask):
+    def make_response(self, response):
+        if isinstance(response, (list, dict)):
+            response = jsonify(response)
+        return super().make_response(response)
 
 
 class DNView(object):
@@ -46,7 +53,7 @@ class DNApp(DNEnv):
             self.app = name_or_app
         else:
             import_name = name_or_app
-            self.app = Flask(name_or_app)
+            self.app = DNFlask(name_or_app)
 
         # 加入自己的Response
         self.app.response_class = DNResponse
@@ -55,8 +62,7 @@ class DNApp(DNEnv):
             self.config_file = config_file
         else:
             self.config_file = os.path.join(self.app.root_path, config_file)
-        super(DNApp, self).__init__(
-            import_name, config_file=self.config_file)
+        super(DNApp, self).__init__(import_name, config_file=self.config_file)
         self.app.add_url_rule("/health_check", view_func=self._health_check)
 
     def _health_check(self):
@@ -70,7 +76,7 @@ class DNApp(DNEnv):
     def init(cls):
         app = cls('')
         app.init_app()
-        return app.flaskapp
+        return app
 
     @classmethod
     def register_view_func(app_cls):
@@ -83,12 +89,12 @@ class DNApp(DNEnv):
                 if hasattr(getattr(obj, props), '__call__'):
                     rule_name = '/' + props.replace('_', '/')
                     print(rule_name)
-                    app.add_url_rule(rule_name, view_func=getattr(obj, props), methods=['GET', 'POST'])
+                    app.flaskapp.add_url_rule(rule_name, view_func=getattr(obj, props), methods=['GET', 'POST'])
 
         return app
 
     def init_app(self):
-        self.app.config.update(config)
+        # self.app.config.update(config)
         self.app.log = logger
         self.log = log.get_logger('api')
         self.app.before_request(self.before_request)
@@ -167,21 +173,21 @@ class DNApp(DNEnv):
         header['Access-Control-Allow-Headers'] = 'Authorization, content-type'
         header['Access-Control-Allow-Methods'] = 'GET, POST, DELETE'
 
-        if getattr(g, 'request_started', None) is not None:
-            t = (time.time() - g.request_started) * 1000
-            if getattr(g, 'response_code', None) is None:
-                code = response.status_code
-            else:
-                code = g.response_code
-            if code // 100 == 2:
-                if t > config.request_slow_timeout:
-                    request_data = getattr(g, 'jsondata', None)
-                    self.log.error('SLOWREQUEST',
-                                   'slow request of %s%s'
-                                   % (request.script_root, request.path),
-                                   {'request_url': request.url,
-                                    'request_data': request_data,
-                                    'request_cost': t})
+        # if getattr(g, 'request_started', None) is not None:
+        #     # t = (time.time() - g.request_started) * 1000
+        #     if getattr(g, 'response_code', None) is None:
+        #         code = response.status_code
+        #     else:
+        #         code = g.response_code
+        #     if code // 100 == 2:
+        #         if t > config.request_slow_timeout:
+        #             request_data = getattr(g, 'jsondata', None)
+        #             self.log.error('SLOWREQUEST',
+        #                            'slow request of %s%s'
+        #                            % (request.script_root, request.path),
+        #                            {'request_url': request.url,
+        #                             'request_data': request_data,
+        #                             'request_cost': t})
         self.log_request(response, code)
         return response
 
@@ -270,5 +276,5 @@ class DNApp(DNEnv):
         options.setdefault('use_debugger', True)
         run_simple(host,
                    port,
-                   self,
+                   self.flaskapp,
                    **options)

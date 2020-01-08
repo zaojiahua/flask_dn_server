@@ -79,4 +79,4 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000)
 ```
 
-返回的app就是flask的app对象，启动的时候按照正常启动flask的方法启动服务即可，一般输入的命令是flask run。[完整的代码仓库](https://source.enncloud.cn/gaohuang/flask_dn_test_server)。
+然后按照正常的方式启动上面的文件即可，比如我的文件叫server.py，则启动命令是python server.py。

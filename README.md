@@ -29,6 +29,7 @@ python setup.py install
 6. 跨域已经在框架内部解决。
 
 ```python
+'''home.py文件'''
 # 引入相关的模块
 from dn.app import DNView
 
@@ -64,15 +65,18 @@ class Bing():
     pass
 ```
 
-在自己的项目下，创建一个server.py文件，加入以下代码。调用register_view_func之前，引入需要对外提供接口的模块，template.view.home模块就是上面的示例代码文件。
+在自己的项目下，创建一个server.py文件，加入以下代码。调用register_view_func之前，引入需要对外提供接口的模块。
 
 ```python
 from dn.app import DNApp
-# 调用register_view_func之前，引入需要对外提供接口的模块，template.view.home模块就是上面的示例代码文件。
-from template.view import home
+# 调用register_view_func之前，引入需要对外提供接口的模块。
+import home
 
 
 app = DNApp.register_view_func()
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8000)
 ```
 
 返回的app就是flask的app对象，启动的时候按照正常启动flask的方法启动服务即可，一般输入的命令是flask run。[完整的代码仓库](https://source.enncloud.cn/gaohuang/flask_dn_test_server)。

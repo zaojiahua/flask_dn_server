@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 install_requires = [
-    'flask==1.0.2',
+    'flask==2.3.2',
     'gevent==1.4.0',
     'gunicorn',
 ]
